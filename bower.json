@@ -1,0 +1,7 @@
+{
+  "name": "yomn",
+  "private": true,
+  "dependencies": {
+    "angular-material": "~0.10.0"
+  }
+}
