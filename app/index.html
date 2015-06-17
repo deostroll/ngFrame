@@ -2,7 +2,7 @@
 <html class="no-js">
   <head>
     <meta charset="utf-8">
-    <title>yomn</title>
+    <title>ngFrame Demos</title>
     <meta name="description" content="">
     <meta name="viewport" content="width=device-width">
     <link rel="shortcut icon" href="/favicon.ico">
@@ -18,7 +18,17 @@
   </head>
   <body ng-app="myapp">
     <div ng-controller="AppCtrl">
-      <ng-frame src="src" controller="ctrl"></ng-frame>
+        <div layout="row">
+            <div flex>
+                <p>Select Demo:</p>
+                <select ng-options="dmo as dmo.item for dmo in demos"
+                    ng-model="demo"></select>
+            </div>
+        </div>
+        <div layout="column" layout-padding="24px">
+            <ng-frame src="demo.page" controller="demo.controller"></ng-frame>
+        </div>
+        
     </div>
 
 

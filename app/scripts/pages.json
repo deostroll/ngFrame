@@ -1,0 +1,12 @@
+[
+	{
+		"item" : "two way data binding",
+		"page" : "views/twoway.html",
+		"controller" : "TwoWayCtrl"
+	},
+	{
+		"item" : "ng-repeat example",
+		"page" : "views/fruits.html",
+		"controller" : "FruitsCtrl"
+	}
+]

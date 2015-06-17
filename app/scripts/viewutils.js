@@ -1,12 +1,11 @@
 angular.module('view.utils',[])
 	.directive('ngFrame', function($compile, $controller, $templateRequest, $sce, $parse){
 		var postLinkFn = function(scope, elem, attrs) {
-			var srcExp = attrs.src;
-			var ctrlExp = $parse(attrs.controller)(scope);
-
+			var srcExp = attrs.src;			
+			
 			scope.$watch($sce.parseAsResourceUrl(srcExp), function srcWatch(src){
 				elem.empty();
-
+				var ctrlExp = $parse(attrs.controller)(scope);
 				if(src) {
 					var newScope = scope.$new();
 					$controller(ctrlExp, {'$scope' : newScope });

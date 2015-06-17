@@ -1,11 +1,22 @@
-<div layout="column" layout-padding="24px">
-	<div flex>
-		<md-list>
-			<md-list-item class="md-3-line" ng-repeat="f in fruits">
-				<div class="md-list-item-text">{{f}}</div>
-				<md-divider ng-if="!$last"></md-divider>
-			</md-list-item>
-		</md-list>
-	</div>
+<md-content>
+	<md-toolbar class="md-warn">
+		<div class="md-toolbar-tools">
+			<h2>ngRepeat Example</h2>
+		</div>
+	</md-toolbar>
+	<p>List of fruits</p>
+	<md-list>
+		<md-list-item class="md-3-line" ng-repeat="f in fruits">
+			<md-button>
+				{{f}}
+			</md-button>			
+			<md-divider></md-divider>
+		</md-list-item>
+	</md-list>
+</md-content>
+
+
 	
-</div>
+	
+	
+	
