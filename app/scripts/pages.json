@@ -1,11 +1,11 @@
 [
 	{
-		"item" : "blank page",
+		"item" : "A blank page",
 		"page" : "",
 		"controller" : ""
 	},
 	{
-		"item" : "two way data binding",
+		"item" : "Two way databind example",
 		"page" : "views/twoway.html",
 		"controller" : "TwoWayCtrl"
 	},
@@ -13,5 +13,10 @@
 		"item" : "ng-repeat example",
 		"page" : "views/fruits.html",
 		"controller" : "FruitsCtrl"
+	},
+	{
+		"item" : "Scope events example",
+		"page" : "views/scope.html",
+		"controller": "TwoWayCtrl"
 	}
 ]
