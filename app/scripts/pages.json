@@ -18,5 +18,10 @@
 		"item" : "Scope events example",
 		"page" : "views/scope.html",
 		"controller": "TwoWayCtrl"
+	},
+	{
+		"item" : "Nested ngFrame",
+		"page": "views/nested.html",
+		"controller": "NestedCtrl"
 	}
 ]

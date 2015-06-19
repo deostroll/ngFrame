@@ -1,0 +1,1 @@
+window.ngFrameModule = window.angular.module('ngFrame',[]);

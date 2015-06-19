@@ -1,6 +1,6 @@
 'use strict';
 (function(angular){
-	angular.module('myapp', ['view.utils', 'ngMaterial'])		
+	angular.module('myapp', ['ngFrame', 'ngMaterial'])
 		.controller('AppCtrl', function($scope, $http){
 			
 			$scope.demo = null;
@@ -23,5 +23,11 @@
 			$scope.$on('$destroy', function() {
 				console.log('$scope destroy on TwoWayCtrl called');
 			});
+			$scope.$on('$destroy', function(){
+				console.log('2nd destroy called')
+			})
+		})
+		.controller('NestedCtrl', function($scope){
+			console.log('NestedCtrl');
 		});
 })(window.angular);

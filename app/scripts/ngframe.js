@@ -1,17 +1,14 @@
 'use strict';
-(function(angular){
-	angular.module('view.utils',[])
-		.config(function($frameProvider){
-			
-			$frameProvider.$$setDebugging(true);
-			//console.log($frameProvider);
-		})
-		.directive('ngFrame', function($compile, $controller, $templateRequest, $sce, $parse, $frame, $rootScope) {
+(function(module){
+	module
+		.directive('ngFrame', function($compile, $controller, $templateRequest, $sce, $parse, $rootScope, $frame) {
 			var postLinkFn = function(scope, elem, attrs) {			
 
-				if(scope === $rootScope) throw new Error('Error in directive usage: cannot work on $rootScope');
+				if(scope === $rootScope) {
+					throw new Error('Error in directive usage: cannot work on $rootScope');
+				}
 
-				var log = $frame.$logger.log.bind($frame.$logger);
+				//var log = $frame.$logger.log.bind($frame.$logger);
 
 				var srcLtrl = attrs.src;		
 				
@@ -39,9 +36,11 @@
 					}
 
 				};
-
-				$frame.$init({frame: frame, scope: scope});
 				//end 1: frame element			
+
+				//invoke init event
+				$frame.$init({frame: frame, scope: scope});
+				
 
 				//begin 2: pageChangeFn: loads new page in ngFrame
 				var pageChangeFn = function pageChangeFn(src) {
@@ -85,4 +84,4 @@
 				link: postLinkFn
 			};
 		});	
-})(window.angular);
+})(window.ngFrameModule, window.angular);
