@@ -2,14 +2,17 @@
 (function(angular){
 	angular.module('view.utils',[])
 		.config(function($frameProvider){
-			console.log('config');
-			console.log($frameProvider);
+			
 			$frameProvider.$$setDebugging(true);
 			//console.log($frameProvider);
 		})
-		.directive('ngFrame', function($compile, $controller, $templateRequest, $sce, $parse, $frame) {
+		.directive('ngFrame', function($compile, $controller, $templateRequest, $sce, $parse, $frame, $rootScope) {
 			var postLinkFn = function(scope, elem, attrs) {			
-				$frame.$logger.log('postLinkFn');
+
+				if(scope === $rootScope) throw new Error('Error in directive usage: cannot work on $rootScope');
+
+				var log = $frame.$logger.log.bind($frame.$logger);
+
 				var srcLtrl = attrs.src;		
 				
 				//locals
@@ -36,6 +39,8 @@
 					}
 
 				};
+
+				$frame.$init({frame: frame, scope: scope});
 				//end 1: frame element			
 
 				//begin 2: pageChangeFn: loads new page in ngFrame
@@ -49,7 +54,7 @@
 
 						$templateRequest(src).then(function(tmpl) {
 							var newScope = scope.$new();
-							
+							newScope.$$ngFrame = true;
 							$controller(locals.controller, {'$scope' : newScope });
 							var el = $compile(tmpl)(newScope);
 							elem.append(el);
@@ -78,32 +83,6 @@
 			//directive api
 			return {
 				link: postLinkFn
-			};
-		})
-		.provider('$frame', function frameProvider() {
-			var self = this;
-
-			//begin 1: FrameLogger
-			var FrameLogger = function(enabled) {
-				this.enabled = enabled;
-			};
-			
-			FrameLogger.prototype.log = function(msg) {
-				if(this.enabled) { console.log(msg); }
-			};
-
-			FrameLogger.prototype.$setEnabled = function(value) { this.enabled = !!value; };
-			//end 1: FrameLogger
-
-			self.$$loggingEnabled = false;
-			self.$$setDebugging = function(value) { self.$$loggingEnabled = !!value; };
-
-			this.$get = function frameFactory() {
-				var logger = new FrameLogger(self.$$loggingEnabled);
-				var factory = {
-					'$logger': logger
-				};
-				return factory;
 			};
 		});	
 })(window.angular);
