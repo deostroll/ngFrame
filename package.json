@@ -29,6 +29,6 @@
     "node": ">=0.10.0"
   },
   "scripts": {
-    "dofoo" : "echo foo"
+    "postinstall" : "bower install"
   }
 }
