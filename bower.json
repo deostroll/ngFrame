@@ -1,7 +1,11 @@
 {
-  "name": "yomn",
+  "name": "ngFrame",
   "private": true,
   "dependencies": {
-    "angular-material": "~0.10.0"
+    "angular": "~1.4.1"
+  },
+  "devDependencies": {
+    "angular-material": "~0.10.0",
+    "angular-route": "~1.4.1"
   }
 }

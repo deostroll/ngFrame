@@ -1,0 +1,10 @@
+<div layout="row">
+    <div flex>
+        <p>Select Demo:</p>
+        <select ng-options="dmo as dmo.item for dmo in demos"
+            ng-model="demo"></select>
+    </div>
+</div>
+<div layout="column" layout-padding="24px">
+    <ng-frame src="example.page" controller="example.controller"></ng-frame>
+</div>

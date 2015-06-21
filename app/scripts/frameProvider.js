@@ -1,7 +1,9 @@
 'use strict';
 (function(module){
-	module
+	module	
 	.provider('$frame', function frameProviderFn() {
+		//var pl = $frameLogger('provider');
+		//pl.log('init');
 		var provider = this;
 
 		//begin 11: locals
@@ -13,23 +15,26 @@
 			'$frameContentChangeStart' :[],
 			'$frameContentChangeError': []
 		};
-		//end 11: locals
 
-		//begin 1: FrameLogger
-		var FrameLogger = function(enabled) {
-			this.enabled = enabled;
-		};
-		
-		FrameLogger.prototype.log = function(msg) {
-			if(this.enabled) { console.log(msg); }
-		};
+		locals.loggerInstance = null;
 
-		FrameLogger.prototype.$setEnabled = function(value) { this.enabled = !!value; };
-		//end 1: FrameLogger
+		//end 11: locals		
+
+		//begin 12: log helper
+		var log = function() {
+			var args = [].slice.call(arguments);
+			if (locals.loggerInstance) {
+				locals.loggerInstance.apply(locals.loggerInstance, args);
+			}
+			else {
+				console.log.apply(console, args);
+			}
+		}
+		//end 12: log helper
 
 		provider.$$loggingEnabled = false;
 		provider.$$setDebugging = function(value) { provider.$$loggingEnabled = !!value; };
-
+		provider.$$setLoggerInstance = function(inst) { locals.loggerInstance = inst; };
 		//begin 10: framework essentials
 
 		//begin 10.1: framework configs
@@ -70,15 +75,13 @@
 		//end 10: framework essentials
 
 		//begin 21: factory
-		this.$get = function frameFactory() {
-			//console.log(this);
-			//frameProvider documenting events
+		this.$get = function frameFactory($ngfl) {
 			
-			var logger = new FrameLogger(provider.$$loggingEnabled);
+			provider.$$setLoggerInstance($ngfl('provider'));
+			var $logger = $ngfl('factory');
+			
 			//begin 2: factory instance
-			var factory = {
-				'$logger': logger
-			};
+			var factory = { '$logger' : $ngfl };
 
 			//begin 2.1: $register - registers scope & frame
 			factory.$register = function(scope, frame) {

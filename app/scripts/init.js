@@ -1,1 +1,1 @@
-window.ngFrameModule = window.angular.module('ngFrame',[]);
+window.ngFrameModule = window.angular.module('ngFrame',['ng']);

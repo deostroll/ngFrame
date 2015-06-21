@@ -18,20 +18,12 @@
   </head>
   <body ng-app="myapp">
     <div ng-controller="AppCtrl">
-        <div layout="row">
-            <div flex>
-                <p>Select Demo:</p>
-                <select ng-options="dmo as dmo.item for dmo in demos"
-                    ng-model="demo"></select>
-            </div>
-        </div>
-        <div layout="column" layout-padding="24px">
-            <ng-frame src="example.page" controller="example.controller"></ng-frame>
-        </div>
-        
+        <h3>Below is a view</h3>
+        <br>
+        <br>
+        <ng-view></ng-view>    
     </div>
-
-
+    
     <!-- build:js(.) scripts/vendor.js -->
     <!-- bower:js -->
     <script src="bower_components/angular/angular.js"></script>

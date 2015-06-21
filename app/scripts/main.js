@@ -1,6 +1,15 @@
 'use strict';
 (function(angular){
-	angular.module('myapp', ['ngFrame', 'ngMaterial'])
+	angular.module('myapp', ['ngFrame', 'ngMaterial', 'ngRoute'])
+		.config(function($routeProvider){
+			$routeProvider
+				.when('/', {
+					templateUrl: 'views/default.html'
+				})
+				.otherwise({
+					redirectTo:'/'
+				});
+		})
 		.controller('AppCtrl', function($scope, $http){
 			
 			$scope.demo = null;
