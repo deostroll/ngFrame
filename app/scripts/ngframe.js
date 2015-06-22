@@ -1,7 +1,7 @@
 'use strict';
 (function(module){
 	module
-		.directive('ngFrame', function($compile, $controller, $templateRequest, $sce, $parse, $rootScope, $frame, $timeout) {
+		.directive('ngFrame', function($compile, $controller, $templateRequest, $sce, $parse, $rootScope, $frame) {
 			var postLinkFn = function(scope, elem, attrs) {			
 
 				if(scope === $rootScope) {
@@ -25,8 +25,9 @@
 					$$isDirty : function() {
 						return !!this.$scope;
 					},
-					$$setDirty: function(scope) {
-						this.$scope = scope;
+					$$setDirty: function(info) {
+						this.$scope = info.scope;
+						this.src = info.src;	
 					},
 					$$cleanup: function(){
 						if(this.$scope) {
@@ -39,12 +40,20 @@
 					}
 				};
 
+				var name = attrs.name;
+				if($frame.$config.forceNameAttrUsage) {
+					if(!name) {
+						throw new Error('ngFrame has no name attribute');
+					}
+					frame.name = name;
+				}
+
 				frame.associatedScope = scope;
 
 				//end 1: frame element
 
 				//invoke init event
-				$frame.$init({frame: frame, scope: scope});
+				$frame.$init(frame);
 				
 
 				//begin 2: pageChangeFn: loads new page in ngFrame
@@ -62,7 +71,7 @@
 							$controller(locals.controller, {'$scope' : newScope });
 							var el = $compile(tmpl)(newScope);
 							elem.append(el);
-							frame.$$setDirty(newScope);
+							frame.$$setDirty({ scope: newScope, src: src });
 							frame.$$raiseEvent('$frameContentChangeSuccess');
 							
 						});

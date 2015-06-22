@@ -35,12 +35,10 @@
 				$scope.sel = mnu;
 			};
 			
-			$frame.$on('$frameInit', function(inst){
-				console.log('MainCtrl', '$frameInit', inst);
-			});
-			
-			$frame.$on('$frameContentChangeSuccess', function(){
-				console.log('MainCtrl', '$frameContentChangeSuccess');
+			$scope.$on('$frameContentChangeSuccess', function(e, frame) {
+				console.log('MainCtrl', 
+					'$frameContentChangeSuccess', 
+					frame.name, frame.src);
 			});
 
 		})
@@ -73,16 +71,15 @@
 		.controller('NestedCtrl', function($scope){
 			console.log('NestedCtrl');
 		})
-		.controller('Ctrl1Ctrl', function($frame, $scope){
-			console.log('Ctrl1Ctrl', $frame);
-			$frame.$on('$frameContentChangeSuccess', function(frame){
-				console.log('Ctrl1Ctrl', '$frameChangeSuccess');
+		.controller('Ctrl1Ctrl', function($scope) {			
+			$scope.$on('$frameContentChangeSuccess', function(frame) {
+				console.log('Ctrl1Ctrl', '$frameContentChangeSuccess', arguments);
 			});
 		})
-		.controller('Ctrl2Ctrl', function($frame, $scope){
-			console.log('Ctrl2Ctrl', $frame);
-			$frame.$on('$frameContentChangeSuccess', function(frame){
-				console.log('Ctrl2Ctrl', '$frameContentChangeSuccess');
+		.controller('Ctrl2Ctrl', function($scope){
+			
+			$scope.$on('$frameContentChangeSuccess', function(frame){
+				console.log('Ctrl2Ctrl', '$frameContentChangeSuccess', arguments);
 			});
 		});
 })(window.angular);

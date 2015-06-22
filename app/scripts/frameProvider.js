@@ -5,7 +5,7 @@
 		//var pl = $frameLogger('provider');
 		//pl.log('init');
 		var provider = this;
-
+		var $rootScope;
 		//begin 11: locals
 		var locals = {};
 
@@ -17,6 +17,9 @@
 		};
 
 		locals.loggerInstance = null;
+
+		//caching frames with names
+		locals.names = {};
 
 		//end 11: locals		
 
@@ -41,16 +44,22 @@
 		provider.config = {};
 
 		//config: max nesting level
-		provider.config.maxNestingLevel = 0; //no nesting by default
+		provider.config.maxNestingLevel = 0; //no nesting by default		
+
 		provider.setMaxNestingLevel = function(level) {
 			if(typeof level === 'number') { provider.config.maxNestingLevel = level; }
 		};
+
+		//force using name attribute
+		provider.config.forceNameAttrUsage = true;
 
 		//end 10.1 : framework configs
 		
 		//begin 10.2: $init - called when a ngFrame initializes
 		provider.$init = function frameProviderInit(inst) {
-			var targetScope = inst.scope;	
+			var frame = inst;
+			var targetScope = frame.associatedScope;
+
 			if(provider.config.maxNestingLevel) {
 				//TODO: logic for nesting
 			}
@@ -60,57 +69,53 @@
 				}
 			}
 
-			//raist the init event
-			provider.$fire('$frameInit', inst.frame);
+			if(provider.config.forceNameAttrUsage) {
+				if(locals.names[frame.name]) {
+					throw new Error('ngFrame with name \'' + frame.name + '\' already exists');
+				}
+				else {
+					locals.names[frame.name] = frame;
+					
+					//raist the init event
+					provider.$fire('$frameInit', frame);
+				}
+			}
+			
 
 		};
 		//end 10.2: $init
 
 		//begin 10.3: $fire - fire event
 		provider.$fire = function frameProviderFire(evt, frame) {
-			var evtQueue = locals.eventCache[evt];
-			if(evtQueue.length) {
-				evtQueue.forEach(function evtQueueForEachFn(cb){
-					cb(frame);
-				});
-			}			
+			$rootScope.$broadcast(evt, frame);
 		};
 		//end 10.3: $fire
+
+		//begin 10.4: assign the rootscope variable
+		provider.$$setRootScope = function(rs) {
+			$rootScope = rs;
+		};
+		//end 10.4		
 
 		//end 10: framework essentials
 
 		//begin 21: factory
-		this.$get = function frameFactory($ngfl) {
+		this.$get = function frameFactory($ngfl, $rootScope) {
 			
 			provider.$$setLoggerInstance($ngfl('provider'));
+			provider.$$setRootScope($rootScope);
+
 			var $logger = $ngfl('factory');
 			
 			//begin 2: factory instance
-			var factory = { '$logger' : $ngfl };
-
-			//begin 2.1: $register - registers scope & frame
-			factory.$register = function(scope, frame) {
-				var id = scope.$$id;
-				locals.cache[id] = frame;
+			var factory = { 
+				'$logger' : $ngfl,
+				'$config' : provider.config
 			};
-			//end 2.1: $register
-
-			//begin 2.2: $deregister - deregister scope
-			factory.$deregister = function(scope) {
-				var id = scope.$$id;
-				locals.cache[id] = undefined;
-			};
-			//end 2.2: $deregister
-
-			//begin 2.3: get - the frame associated with scope
-			factory.get = function frameFactoryGet(scope) {
-				return locals.cache[scope.$$id];
-			};
-			//end 2.3: get
 
 			//begin 2.4: $init - to initialize the frame on the framework
-			factory.$init = function frameFactoryInit(inst) {
-				provider.$init(inst);
+			factory.$init = function frameFactoryInit(frame) {
+				provider.$init(frame);
 			};
 			//end 2.4: $init
 
@@ -121,18 +126,11 @@
 			};				
 			//end 2.5
 
-			//begin 2.6 - $on event register
-			factory.$on = function frameFactoryOn(evt, fn) {
-				var evtQueue = locals.eventCache[evt];
-				if(evtQueue) {
-					evtQueue.push(fn);
-				}
-			};
-			//end 2.6 $on
-
 			//begin 2.7: raise event
 			factory.$$raiseEvent = function frameFactoryRaiseEvent(evt, frame) {
-				provider.$fire(evt, frame);
+				if(locals.eventCache[evt]) {
+					provider.$fire(evt, frame);
+				}
 			};
 			//end 2.7: raise event
 
