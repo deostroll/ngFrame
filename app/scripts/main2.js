@@ -40,7 +40,16 @@
 					'$frameContentChangeSuccess', 
 					frame.name, frame.src);
 			});
+			$scope.$on('$frameContentChangeError', function(e, frame){
+				var err = frame.getLastError();
+				console.log('Nav Error:', err);
+			});
 
+			$scope.$on('$frameContentChangeStart', function(e, frame){
+				if(frame.nav.src === 'views/some.html') {
+					frame.setNavigationCancel(true);
+				}
+			});
 		})
 		.controller('AppCtrl', function($scope, $http){
 			
