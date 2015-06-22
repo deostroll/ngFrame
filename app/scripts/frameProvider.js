@@ -112,13 +112,28 @@
 			provider.$$setLoggerInstance($ngfl('provider'));
 			provider.$$setRootScope($rootScope);
 
+			var fn = function(name) {
+				var log = $ngfl(name);
+				var obj = {};
+				obj.log = function() {					
+					if(provider.$$loggingEnabled) {
+						var args = [].slice.call(arguments);
+						log.log.apply($ngfl, args)
+					}
+				}
+				return obj;
+			};
+
 			var $logger = $ngfl('factory');
 			
 			//begin 2: factory instance
-			var factory = { 
-				'$logger' : $ngfl,
+			var factory = { 				
 				'$config' : provider.config
 			};
+
+			//begin 2.3: $logger
+			factory.$logger = fn;
+			//end 2.3
 
 			//begin 2.4: $init - to initialize the frame on the framework
 			factory.$init = function frameFactoryInit(frame) {

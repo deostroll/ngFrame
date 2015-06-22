@@ -1,7 +1,8 @@
 'use strict';
 (function(angular){
 	angular.module('myapp2', ['ngFrame', 'ngMaterial', 'ngRoute'])
-		.config(function($routeProvider){
+		.config(function($routeProvider, $frameProvider){
+			$frameProvider.$$setDebugging(true);
 			$routeProvider
 				.when('/', {
 					templateUrl: 'views/default2.html',

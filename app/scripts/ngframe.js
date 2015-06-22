@@ -3,7 +3,8 @@
 	module
 		.directive('ngFrame', function($compile, $controller, $templateRequest, $sce, $parse, $rootScope, $frame) {
 			var postLinkFn = function(scope, elem, attrs) {			
-
+				var lg = $frame.$logger('directive');
+				lg.log('$create');
 				if(scope === $rootScope) {
 					throw new Error('Error in directive usage: cannot work on $rootScope');
 				}
@@ -60,13 +61,9 @@
 				frame.associatedScope = scope;
 
 				//end 1: frame element
-
-				elem.on('$destroy', function(){
-					$frame.$destroy(frame);
-				});
-				//invoke init event
-				$frame.$init(frame);
 				
+				//invoke init event
+				$frame.$init(frame);				
 
 				//begin 2: pageChangeFn: loads new page in ngFrame
 				var pageChangeFn = function pageChangeFn(src) {
@@ -126,6 +123,11 @@
 				};
 
 				scope.$watch($sce.parseAsResourceUrl(srcLtrl), srcWatchFn);
+
+				scope.$on('$destroy', function(){
+					lg.log('$destroy');
+					$frame.$destroy(frame);
+				});
 			};
 
 			//directive api
