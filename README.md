@@ -39,9 +39,10 @@ Usage
 	<input type="button" value="Change" ng-click="change()"/>
 	<br/>
 	<br/>
-	<ng-frame src="src" controller="controller"></ng-frame>
+	<ng-frame src="src" controller="controller" name="ngFrame1"></ng-frame>
 </div>
 ```
+**Note:** the ```name``` attribute is a must by default. Can be overrided through configuration.
 
 ngFrame Events
 -
@@ -83,3 +84,5 @@ TODO
 - manage history
 - helper directives
 - frame navigation via code
+- configuration to allow nameless ngFrame
+- configure default pages like a 404-page, error, etc.
