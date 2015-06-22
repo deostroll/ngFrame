@@ -97,6 +97,13 @@
 		};
 		//end 10.4		
 
+		//begin 10.5: $destroy - remove frame reference
+		provider.$destroy = function(frame) {
+			if(provider.config.forceNameAttrUsage) {
+				locals.names[frame.name] = undefined;
+			}
+		};
+		//end 10.5
 		//end 10: framework essentials
 
 		//begin 21: factory
@@ -120,9 +127,8 @@
 			//end 2.4: $init
 
 			//begin 2.5: $destroy - to destroy frame
-			factory.$destroy = function(inst) {
-				//TODO: implement this inst
-				console.log(inst);
+			factory.$destroy = function(frame) {
+				provider.$destroy(frame);
 			};				
 			//end 2.5
 

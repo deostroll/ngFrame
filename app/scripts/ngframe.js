@@ -61,6 +61,9 @@
 
 				//end 1: frame element
 
+				elem.on('$destroy', function(){
+					$frame.$destroy(frame);
+				});
 				//invoke init event
 				$frame.$init(frame);
 				
@@ -76,7 +79,7 @@
 						frame.navigateCancel = false;
 						return;							
 					}
-					
+
 					if(src) {
 
 						if(frame.$$isDirty()) {

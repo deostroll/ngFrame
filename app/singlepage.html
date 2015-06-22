@@ -1,0 +1,44 @@
+<!doctype html>
+<html class="no-js">
+  <head>
+    <meta charset="utf-8">
+    <title>ngFrame Demos</title>
+    <meta name="description" content="">
+    <meta name="viewport" content="width=device-width">
+    <link rel="shortcut icon" href="/favicon.ico">
+    <!-- Place favicon.ico and apple-touch-icon.png in the root directory -->
+    <!-- build:css(.) styles/vendor.css -->
+    <!-- bower:css -->
+    <link rel="stylesheet" href="bower_components/angular-material/angular-material.css" />
+    <!-- endbower -->
+    <!-- endbuild -->
+    <!-- build:css(.tmp) styles/main.css -->
+    <link rel="stylesheet" href="styles/main.css">
+    <!-- endbuild -->
+  </head>
+  <body ng-app="myapp2">    
+    <div id="container">
+        <ng-view></ng-view> 
+    </div> 
+    
+    
+    
+    <!-- build:js(.) scripts/vendor.js -->
+    <!-- bower:js -->
+    <script src="bower_components/angular/angular.js"></script>
+    <script src="bower_components/angular-animate/angular-animate.js"></script>
+    <script src="bower_components/angular-aria/angular-aria.js"></script>
+    <script src="bower_components/angular-material/angular-material.js"></script>
+    <script src="bower_components/angular-route/angular-route.js"></script>
+    <!-- endbower -->
+    <!-- endbuild -->
+
+        <!-- build:js({app,.tmp}) scripts/main.js, scripts/viewutils.js -->
+        <script type="text/javascript" src="scripts/init.js"></script>
+        <script type="text/javascript" src="scripts/frameLogger.js"></script>
+        <script type="text/javascript" src="scripts/frameProvider.js"></script>
+        <script type="text/javascript" src="scripts/ngframe.js"></script>
+        <script src="scripts/main3.js"></script>
+        <!-- endbuild -->
+</body>
+</html>
