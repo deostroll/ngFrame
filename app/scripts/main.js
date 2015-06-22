@@ -11,7 +11,7 @@
 				});
 		})
 		.controller('AppCtrl', function($scope, $http){
-			
+			console.log('AppCtrl');
 			$scope.demo = null;
 			$scope.demos = null;
 			$scope.example = {};
@@ -24,6 +24,10 @@
 			$scope.$watch('demo', function(demo) {
 				$scope.example = angular.extend({}, demo);
 			});
+
+			$scope.onload = function() {
+				console.log(arguments);
+			};
 		})
 		.controller('FruitsCtrl', function($scope){
 			$scope.fruits = ['grapes', 'banannas', 'oranges', 'water melon', 'guava', 'cherry'];

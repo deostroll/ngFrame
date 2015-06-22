@@ -19,9 +19,10 @@
   <body ng-app="myapp">
     <div ng-controller="AppCtrl">
         <h3>Below is a view</h3>
+        {{example |json }}
         <br>
         <br>
-        <ng-view></ng-view>    
+        <ng-view onload="onload"></ng-view>    
     </div>
     
     <!-- build:js(.) scripts/vendor.js -->
