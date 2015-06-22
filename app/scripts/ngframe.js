@@ -25,40 +25,89 @@
 					$$isDirty : function() {
 						return !!this.$scope;
 					},
-					$$setDirty: function(scope) {
-						this.$scope = scope;
+					$$setDirty: function(info) {
+						this.$scope = info.scope;
+						this.src = info.src;	
+						this.controller = info.controller;
 					},
 					$$cleanup: function(){
 						if(this.$scope) {
 							this.$scope.$destroy();
 							this.$scope = null;
 						}
+					},
+					$$raiseEvent: function(evt) {
+						$frame.$$raiseEvent(evt, this);
+					},
+					getLastError : function() {  
+						var err = this.$$error; 
+						this.$error = null; 
+						return err; 
+					},
+					setNavigationCancel: function (value) { 
+						this.navigateCancel = !!value; 
 					}
-
 				};
-				//end 1: frame element			
 
+				var name = attrs.name;
+				if($frame.$config.forceNameAttrUsage) {
+					if(!name) {
+						throw new Error('ngFrame has no name attribute');
+					}
+					frame.name = name;
+				}
+				frame.navigateCancel = false;
+				frame.associatedScope = scope;
+
+				//end 1: frame element
+
+				elem.on('$destroy', function(){
+					$frame.$destroy(frame);
+				});
 				//invoke init event
-				$frame.$init({frame: frame, scope: scope});
+				$frame.$init(frame);
 				
 
 				//begin 2: pageChangeFn: loads new page in ngFrame
 				var pageChangeFn = function pageChangeFn(src) {
+					
+					frame.nav = {src: src, controller: locals.controller };
+					
+					frame.$$raiseEvent('$frameContentChangeStart');
+
+					if(frame.navigateCancel) {
+						frame.navigateCancel = false;
+						return;							
+					}
+
 					if(src) {
 
 						if(frame.$$isDirty()) {
 							frame.$$cleanup();
 							elem.empty();
 						}
-
+						
 						$templateRequest(src).then(function(tmpl) {
 							var newScope = scope.$new();
 							newScope.$$ngFrame = true;
-							$controller(locals.controller, {'$scope' : newScope });
+							try {
+								$controller(locals.controller, {'$scope' : newScope });	
+							}
+							catch(e) {
+								frame.$$error = e;
+								frame.$$raiseEvent('$frameContentChangeError');
+								return;
+							}
+							
 							var el = $compile(tmpl)(newScope);
 							elem.append(el);
-							frame.$$setDirty(newScope);
-						});
+							frame.$$setDirty({ scope: newScope, src: src, controller: locals.controller });
+							frame.$$raiseEvent('$frameContentChangeSuccess');
+							
+						}, function(err) {
+							frame.$$error = err;
+							frame.$$raiseEvent('$frameContentChangeError');
+						});	
 					}
 					else {
 						if(frame.$$isDirty()) {

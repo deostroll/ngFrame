@@ -1,0 +1,25 @@
+<pre>
+{{ $location.absUrl() }}
+</pre>
+
+<div layout="column">
+	<md-content>
+		<md-list>
+			<md-list-item ng-repeat="view in views">
+				<div class="md-list-item-text">
+					<a href="{{view.url}}">{{view.text}}</a>
+				</div>
+			</md-list-item>
+		</md-list>
+	</md-content>
+</div>
+<div layout="row">
+    <div flex>
+        <p>Select Demo:</p>
+        <select ng-options="dmo as dmo.item for dmo in demos"
+            ng-model="demo"></select>
+    </div>
+</div>
+<div layout="column" layout-padding="24px">
+    <ng-frame src="example.page" controller="example.controller" name="ngframe2"></ng-frame>
+</div>

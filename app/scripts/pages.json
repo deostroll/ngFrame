@@ -23,5 +23,20 @@
 		"item" : "Nested ngFrame",
 		"page": "views/nested.html",
 		"controller": "NestedCtrl"
+	},
+	{
+		"item" : "Non-existant page",
+		"page" : "views/foo.html",
+		"controller" : "SomeCtrl"
+	},
+	{
+		"item" : "Non-existant page 2",
+		"page" : "views/default.html",
+		"controller" : "SomeCtrl"
+	},
+	{
+		"item" : "Some page",
+		"page" : "views/some.html",
+		"controller": "SomeCtrl"
 	}
 ]

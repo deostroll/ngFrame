@@ -2,10 +2,10 @@
 
 (function () {
   'use strict';
-
-  describe('Give it some context', function () {
-    describe('maybe a bit more context here', function () {
-      it('should run here few assertions', function () {
+  
+  describe('ngFrame directive unit tests', function () {
+    describe('name attribute usage', function () {
+      it('should fail when name attribute is not included', function () {
 
       });
     });

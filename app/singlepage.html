@@ -16,27 +16,7 @@
     <link rel="stylesheet" href="styles/main.css">
     <!-- endbuild -->
   </head>
-<<<<<<< HEAD
-  <body ng-app="myapp">
-    <div ng-controller="AppCtrl">
-        <h3>Below is a view</h3>
-        {{example |json }}
-        <br>
-        <br>
-        <ng-view onload="onload"></ng-view>    
-=======
-  <body ng-app="myapp2">
-    <div class="bluey" ng-controller="MainCtrl">
-        <ul>
-            <li ng-repeat="menu in menus">
-                <a href="javascript:void(0)" ng-click="change(menu.id)">{{menu.name}}</a>&nbsp;<span ng-show="sel.id === menu.id">*</span>
-            </li>
-        </ul>
-        <br>
-        <br>
-        <ng-frame src="sel.page" controller="sel.ctrl" name="ngframe1"></ng-frame>
->>>>>>> 6e5806e70dfc80d96244ac73f1664b9133f3aef4
-    </div>
+  <body ng-app="myapp2">    
     <div id="container">
         <ng-view></ng-view> 
     </div> 
@@ -58,7 +38,7 @@
         <script type="text/javascript" src="scripts/frameLogger.js"></script>
         <script type="text/javascript" src="scripts/frameProvider.js"></script>
         <script type="text/javascript" src="scripts/ngframe.js"></script>
-        <script src="scripts/main2.js"></script>
+        <script src="scripts/main3.js"></script>
         <!-- endbuild -->
 </body>
 </html>

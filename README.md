@@ -39,15 +39,50 @@ Usage
 	<input type="button" value="Change" ng-click="change()"/>
 	<br/>
 	<br/>
-	<ng-frame src="src" controller="controller"></ng-frame>
+	<ng-frame src="src" controller="controller" name="ngFrame1"></ng-frame>
 </div>
 ```
+**Note:** the ```name``` attribute is a must by default. Can be overrided through configuration.
+
+ngFrame Events
+-
+
+Every frame event is available to the scope object and is supplied with a reference to a frame object. 
+
+For e.g.
+```
+$scope.$on('$frameContentChangeSuccess', function(evt, frame){
+	console.log('Current page loaded:', frame.src, 'Current controller:', frame.controller);
+});
+```
+**Available Events:**
+
+- **$frameInit** : raised when the ngFrame initializes
+- **$frameContentChangeStart** : raised when the ngFrame prior to the page/controller the ngFrame is loading. The ```src``` and ```controller``` properties of the ```nav`` property of the frame object exposes details of the page/controller being navigated to. To cancel navigation for whatever reason call ```setNavigationCancel(true)``` on the frame.
+
+Example:
+
+```
+$scope.$on('$frameContentChangeStart', function(evt, frame){
+	console.log('target page:', frame.nav.src, 'target controller:', frame.nav.controller, 'current page:', frame.src, 'current controller:', frame.controller);
+
+	//to cancel
+	//frame.setNavigationCancel(true);
+});
+```
+- **$frameContentChangeSuccess**: raised when ngFrame successfully loads page/controller
+- **$frameContentChangeError**: raised when ngFrame cannot load page/controller
 
 Important notes
 -
 - Its not an iframe or an ```ngView```
-- A view in ```ngFrame``` (also known as a *frame* or a *page*) has two things associated with it: *a view* (or template), and, a *controller*. Hence, *page navigations*, are not what they traditionally are; its best you explicitly specify the view & controller prior to page navigation.
+- A view in ```ngFrame``` (also known as a *frame* or a *page*) has two things associated with it: *a view* (or template), and, a *controller*. Hence, to navigate to a **page** always remember what *page* & *controller* to load.
 
 TODO
 -
-- Implement a pseudo service called ```$frame``` which controls the ngFrame through code.
+- frame name validation
+- manage history
+- helper directives
+- frame navigation via code
+- configuration to allow nameless ngFrame
+- configure default pages like a 404-page, error, etc.

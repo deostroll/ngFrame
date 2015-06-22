@@ -24,7 +24,7 @@
 		Logger.prototype.log = function() {
 			var args = Array.prototype.slice.call(arguments);
 			args.unshift(this.name);
-			$log.apply($logs, args);
+			$log.log.apply($log, args);
 		};
 
 		var getInstance = function(name) {
