@@ -1,7 +1,7 @@
 'use strict';
 (function(module){
 	module
-		.directive('ngFrame', function($compile, $controller, $templateRequest, $sce, $parse, $rootScope, $frame) {
+		.directive('ngFrame', function($compile, $controller, $templateRequest, $sce, $parse, $rootScope, $frame, $timeout) {
 			var postLinkFn = function(scope, elem, attrs) {			
 
 				if(scope === $rootScope) {
@@ -33,10 +33,15 @@
 							this.$scope.$destroy();
 							this.$scope = null;
 						}
+					},
+					$$raiseEvent: function(evt) {
+						$frame.$$raiseEvent(evt, this);
 					}
-
 				};
-				//end 1: frame element			
+
+				frame.associatedScope = scope;
+
+				//end 1: frame element
 
 				//invoke init event
 				$frame.$init({frame: frame, scope: scope});
@@ -58,6 +63,8 @@
 							var el = $compile(tmpl)(newScope);
 							elem.append(el);
 							frame.$$setDirty(newScope);
+							frame.$$raiseEvent('$frameContentChangeSuccess');
+							
 						});
 					}
 					else {

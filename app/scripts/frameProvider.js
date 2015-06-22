@@ -60,17 +60,22 @@
 				}
 			}
 
-			//raist the init
-			//if(locals.onInitFn) { locals.onInitFn(inst); }
-			var evtQueue = locals.eventCache.$frameInit;
-			if(evtQueue.length) {
-				evtQueue.forEach(function evtQueueFn(cb){
-					cb(inst);
-				});
-			}
+			//raist the init event
+			provider.$fire('$frameInit', inst.frame);
 
 		};
 		//end 10.2: $init
+
+		//begin 10.3: $fire - fire event
+		provider.$fire = function frameProviderFire(evt, frame) {
+			var evtQueue = locals.eventCache[evt];
+			if(evtQueue.length) {
+				evtQueue.forEach(function evtQueueForEachFn(cb){
+					cb(frame);
+				});
+			}			
+		};
+		//end 10.3: $fire
 
 		//end 10: framework essentials
 
@@ -124,6 +129,12 @@
 				}
 			};
 			//end 2.6 $on
+
+			//begin 2.7: raise event
+			factory.$$raiseEvent = function frameFactoryRaiseEvent(evt, frame) {
+				provider.$fire(evt, frame);
+			};
+			//end 2.7: raise event
 
 			//end 2: factory instance
 			return factory;
