@@ -118,7 +118,7 @@
 				obj.log = function() {					
 					if(provider.$$loggingEnabled) {
 						var args = [].slice.call(arguments);
-						log.log.apply($ngfl, args)
+						log.log.apply(log, args);
 					}
 				}
 				return obj;
