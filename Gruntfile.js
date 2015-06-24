@@ -16,10 +16,24 @@ module.exports = function (grunt) {
   // Load grunt tasks automatically
   require('load-grunt-tasks')(grunt);
 
+  var bower = require('./bower.json');
   // Configurable paths
   var config = {
     app: 'app',
-    dist: 'dist'
+    dist: 'dist',
+    scripts: '<%= config.app %>/scripts',
+    src: {
+      include: [
+        'init.js',     
+        'frameProvider.js',
+        'frameLogger.js',
+        'ngframe.js'
+      ],
+      ignore:[
+        'main*.js'
+      ]
+    },
+    pkg: bower
   };
 
   // Define the configuration for all the tasks
@@ -119,6 +133,15 @@ module.exports = function (grunt) {
           ]
         }]
       },
+      dist2: {
+        files: [{
+          dot: true,
+          src: [            
+            '<%= config.dist %>/*',
+            '!<%= config.dist %>/.git*'
+          ]
+        }]
+      },
       server: '.tmp'
     },
 
@@ -133,7 +156,10 @@ module.exports = function (grunt) {
         '<%= config.app %>/scripts/{,*/}*.js',
         '!<%= config.app %>/scripts/vendor/*',
         'test/spec/{,*/}*.js'
-      ]
+      ],
+      dist: [
+        'dist/<%= config.pkg.name %>.js'
+      ]      
     },
 
     // Mocha testing framework configuration options
@@ -266,18 +292,21 @@ module.exports = function (grunt) {
     //     }
     //   }
     // },
-    // uglify: {
-    //   dist: {
-    //     files: {
-    //       '<%= config.dist %>/scripts/scripts.js': [
-    //         '<%= config.dist %>/scripts/scripts.js'
-    //       ]
-    //     }
-    //   }
-    // },
-    // concat: {
-    //   dist: {}
-    // },
+    uglify: {
+      dist: {
+        files: {
+          '<%= config.dist %>/<%= config.pkg.name %>.min.js': [
+            '<%= config.dist %>/<%= config.pkg.name %>.js'
+          ]
+        }
+      }
+    },
+    concat: {
+      dist: {
+        src: [ ],
+        dest:'dist/<%= config.pkg.name %>.js'
+      }
+    },
 
     // Copies remaining files to places other tasks can use
     copy: {
@@ -382,4 +411,56 @@ module.exports = function (grunt) {
     'test',
     'build'
   ]);
+
+  grunt.registerTask('check', 'checks for proper inclusion of all js files', function() {
+    var config = grunt.config.get('config');
+    var options  = {
+      cwd: config.scripts
+    }
+    
+    var files = [];
+    config.src.include.forEach(function(file) {
+      files.push.apply(files, grunt.file.expand(options, file));
+    });
+
+    config.src.ignore.forEach(function(file) {
+      files.push.apply(files, grunt.file.expand(options, file));
+    });
+
+    var allFiles = grunt.file.expand(options, '*.js');
+
+    //console.log('Files:', files);
+    //console.log('All Files:', allFiles);
+
+    var notExists = function(file) {
+      return files.indexOf(file) === -1;
+    };
+    
+    if(allFiles.some(notExists)) {
+      grunt.warn('You may have missed including/ignoring some files');
+    }
+  });
+
+  grunt.registerTask('prepareConcat', 'prepares files to concat', function(){
+    var concat = grunt.config.get('concat');
+    var config = grunt.config.get('config');
+    var scriptsPath = config.scripts;
+    var files = config.src.include.map(function(file) {
+      return config.scripts + '/' + file;
+    });
+    //console.log(files);
+    concat.dist.src = files;
+    grunt.config.set('concat', concat);
+  });
+
+  grunt.registerTask('echo','', function(){
+    console.log(grunt.config.get('config').pkg);
+  });
+
+  grunt.registerTask('makelib', 'make the library', [
+      'clean:dist2',
+      'prepareConcat',
+      'concat',
+      'uglify'
+    ]);
 };

@@ -1,5 +1,6 @@
-'use strict';
+
 (function(module){
+	'use strict';
 	module
 		.directive('ngFrame', function($compile, $controller, $templateRequest, $sce, $parse, $rootScope, $frame) {
 			var postLinkFn = function(scope, elem, attrs) {			
@@ -7,9 +8,7 @@
 				lg.log('$create');
 				if(scope === $rootScope) {
 					throw new Error('Error in directive usage: cannot work on $rootScope');
-				}
-
-				//var log = $frame.$logger.log.bind($frame.$logger);
+				}				
 
 				var srcLtrl = attrs.src;		
 				
@@ -21,49 +20,7 @@
 					ctrlExp: $parse(attrs.controller)
 				};
 
-				//begin 1: frame: interface to manage frame
-				var frame = {
-					$$isDirty : function() {
-						return !!this.$scope;
-					},
-					$$setDirty: function(info) {
-						this.$scope = info.scope;
-						this.src = info.src;	
-						this.controller = info.controller;
-					},
-					$$cleanup: function(){
-						if(this.$scope) {
-							this.$scope.$destroy();
-							this.$scope = null;
-						}
-					},
-					$$raiseEvent: function(evt) {
-						$frame.$$raiseEvent(evt, this);
-					},
-					getLastError : function() {  
-						var err = this.$$error; 
-						this.$error = null; 
-						return err; 
-					},
-					setNavigationCancel: function (value) { 
-						this.navigateCancel = !!value; 
-					}
-				};
-
-				var name = attrs.name;
-				if($frame.$config.forceNameAttrUsage) {
-					if(!name) {
-						throw new Error('ngFrame has no name attribute');
-					}
-					frame.name = name;
-				}
-				frame.navigateCancel = false;
-				frame.associatedScope = scope;
-
-				//end 1: frame element
-				
-				//invoke init event
-				$frame.$init(frame);				
+				var frame = $frame.$create(attrs.name);
 
 				//begin 2: pageChangeFn: loads new page in ngFrame
 				var pageChangeFn = function pageChangeFn(src) {

@@ -1,5 +1,6 @@
-'use strict';
+
 (function(module){
+	'use strict';
 	module.factory('$ngfl' , ['$log', function($log) {
 
 		var pad = function (num, size) {
