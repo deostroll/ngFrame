@@ -1,7 +1,20 @@
 {
   "name": "ngFrame",
   "version" : "0.0.1",
-  "private": true,
+  "main" : "dist/ngFrame.js",
+  "ignore" : [
+  	"app",
+  	"test",
+  	".bowerrc",
+  	".editorconfig",
+  	".gitattributes",
+  	".gitignore",
+  	".jshintrc",
+  	".yo-rc.json",
+  	"Gruntfile.js",
+  	"package.json",
+  	"README.md"
+  ],
   "dependencies": {
     "angular": "~1.4.1"
   },
