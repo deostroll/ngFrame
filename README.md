@@ -3,6 +3,15 @@
 
 This angular directive is an alernative to ngView. The difference is that, in ngView, the route params define what template and controller to load. ngFrame lets you have the flexibility of doing this via the associated controller
 
+Installation
+-
+
+This package is available through bower. (If you want to get started with bower, visit http://bower.io)
+
+```
+bower install ngFrame --save
+```
+
 Usage
 -
 
