@@ -18,7 +18,7 @@ Usage
 **code:**
 ```
 (function(angular){
-	angular.module('myapp', ['view.utils'])
+	angular.module('myapp', ['ngFrame'])
 		.controller('AppCtrl', function($scope) {
 
 			//assume you have these views
