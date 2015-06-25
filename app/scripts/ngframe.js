@@ -18,44 +18,47 @@
 					controller: null,
 					srcExp: $parse(attrs.src),
 					ctrlExp: $parse(attrs.controller)
-				};
-
-				var frame = $frame.$create(attrs.name);
+				};				
 
 				//begin 2: pageChangeFn: loads new page in ngFrame
-				var pageChangeFn = function pageChangeFn(src) {
+				var pageChangeFn = function pageChangeFn(src, controller) {
 					
-					frame.nav = {src: src, controller: locals.controller };
-					
+					frame.nav = {src: src, controller: controller };
+					lg.log('navigation start');
 					frame.$$raiseEvent('$frameContentChangeStart');
 
 					if(frame.navigateCancel) {
 						frame.navigateCancel = false;
+						lg.log('navigation cancelled');
 						return;							
 					}
 
 					if(src) {
 
-						if(frame.$$isDirty()) {
-							frame.$$cleanup();
-							elem.empty();
-						}
+						cleanup();
 						
 						$templateRequest(src).then(function(tmpl) {
 							var newScope = scope.$new();
 							newScope.$$ngFrame = true;
 							try {
-								$controller(locals.controller, {'$scope' : newScope });	
+								$controller(controller, {'$scope' : newScope });	
 							}
 							catch(e) {
 								frame.$$error = e;
+								lg.log('Navigate Error', e);
 								frame.$$raiseEvent('$frameContentChangeError');
 								return;
 							}
 							
 							var el = $compile(tmpl)(newScope);
 							elem.append(el);
-							frame.$$setDirty({ scope: newScope, src: src, controller: locals.controller });
+							frame.$$setDirty({ scope: newScope, src: src, controller: controller });
+							if(frame.navigationInvokedByUser) {
+								//update parent scope
+								locals.srcExp.assign(scope, frame.src);
+								locals.ctrlExp.assign(scope, frame.controller);
+							}
+							lg.log('Navigate Success');
 							frame.$$raiseEvent('$frameContentChangeSuccess');
 							
 						}, function(err) {
@@ -64,27 +67,41 @@
 						});	
 					}
 					else {
+						cleanup();					
+					}
+
+					function cleanup () {						
 						if(frame.$$isDirty()) {
 							frame.$$cleanup();
 							elem.empty();
-						}					
+							lg.log('frame cleared');
+						}						
 					}
 				};
 				//end 2: pageChangeFn
 
 				//srcWatchFn
 				var srcWatchFn = function srcWatchFn(src) {
+					lg.log('src change via watch');
 					locals.src = src;
 					locals.controller = locals.ctrlExp(scope);
-					pageChangeFn(src);
-				};
-
-				scope.$watch($sce.parseAsResourceUrl(srcLtrl), srcWatchFn);
+					if(frame.navigationInvokedByUser) {
+						frame.navigationInvokedByUser = false;
+						lg.log('Cancelled. navigationInvokedByUser = true');
+						return;
+					}
+					pageChangeFn(locals.src, locals.controller);
+				};				
 
 				scope.$on('$destroy', function(){
 					lg.log('$destroy');
 					$frame.$destroy(frame);
 				});
+
+				//creating the one & only frame reference
+				var frame = $frame.$create(attrs.name, pageChangeFn);
+
+				scope.$watch($sce.parseAsResourceUrl(srcLtrl), srcWatchFn);
 			};
 
 			//directive api

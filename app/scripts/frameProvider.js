@@ -2,7 +2,7 @@
 (function(module){
 	'use strict';
 	module	
-	.provider('$frame', function frameProviderFn() {
+	.provider('$frame', function NgFrameProvider() {
 		//var pl = $frameLogger('provider');
 		//pl.log('init');
 		var provider = this;
@@ -66,7 +66,7 @@
 		//end 12: for logging
 
 		//begin 13: NgFrame constructor
-		var NgFrame = function(name) {
+		var NgFrame = function(name, pageChangeFn) {
 			var _name_ = name;
 			Object.defineProperty(this, 'name', {
 				get: function() { return _name_; }
@@ -75,6 +75,8 @@
 			this.$scope = null;
 			this.src = null;
 			this.controller = null;			
+			this.$pageChangeFn = pageChangeFn;
+			this.navigationInvokedByUser = false;
 		};
 
 		NgFrame.prototype.$$setDirty = function(info) {
@@ -111,8 +113,16 @@
 			this.navigationCancel = !!value;
 		};
 
-		NgFrame.prototype.navigate = function(navinfo) {
+		NgFrame.prototype.navigate = function(src, controller) {
+			if(arguments.length !== 2) {
+				throw new Error('Invalid arguments passed');
+			}
 
+			if(typeof src === 'string' && (typeof controller === 'string' || typeof controller === 'function')) {
+				this.navigationInvokedByUser = true;
+				this.$pageChangeFn(src, controller);	
+			}
+			
 		};
 		//end 13: NgFrame constructor
 
@@ -188,7 +198,7 @@
 		//end 10.5
 
 		//begin 10.6: $createFrame - does name validation & creating the frame object.
-		provider.$createFrame = function(name) {
+		provider.$createFrame = function(name, pageChangeFn) {
 			var frame;
 
 			if(provider.config.forceNameAttrUsage) {
@@ -200,7 +210,7 @@
 					throw new Error('ngFrame with name \'' + name + '\' already exists');
 				}
 				else {					
-					frame = new NgFrame(name);
+					frame = new NgFrame(name, pageChangeFn);
 					locals.names.push(frame);
 				}
 
@@ -213,7 +223,7 @@
 					else if (!name || name.length === 0) {
 						//assign new name
 						name = '____frame____' + padZero(locals.names.length, 3);
-						frame = new NgFrame(name);
+						frame = new NgFrame(name, pageChangeFn);
 						locals.names.push(frame);
 					}
 				}
@@ -226,7 +236,7 @@
 		//end 10: framework essentials
 
 		//begin 21: factory
-		this.$get = function frameFactory($ngfl, $rootScope) {
+		this.$get = function NgFrameFactory($ngfl, $rootScope) {
 			
 			provider.$$setLoggerInstance($ngfl('provider'));
 			provider.$$setRootScope($rootScope);
@@ -275,8 +285,8 @@
 			//end 2.7: raise event
 
 			//begin 2.8: $create - creates the frame
-			factory.$create = function(name) {
-				return provider.$createFrame(name);
+			factory.$create = function(name, pageChangeFn) {
+				return provider.$createFrame(name, pageChangeFn);
 			};
 			//end 2.8: $create
 

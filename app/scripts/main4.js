@@ -2,25 +2,28 @@
 (function(angular){
 	angular.module('myapp', ['ngFrame', 'ngMaterial'])		
 		.config(function($frameProvider){
-			
+			$frameProvider.$$setDebugging(true);
 		})
 		.controller('AppCtrl', function($scope, $http){
-			console.log('AppCtrl');
-			$scope.demo = null;
+			
+			var frame;
+			
+			$scope.demo; 
 			$scope.demos = null;
 			$scope.example = {};
 
 			$http({url: 'scripts/pages.json'})
 				.success(function(data){
 					$scope.demos = data;
+					$scope.example = data[1];
 				});
 
-			$scope.$watch('demo', function(demo) {
-				$scope.example = angular.extend({}, demo);
+			$scope.$on('$frameInit', function(evt, f){
+				frame = f;
 			});
 
-			$scope.onload = function() {
-				console.log(arguments);
+			$scope.change = function() {
+				frame.navigate($scope.demo.page, $scope.demo.controller);
 			};
 		})
 		.controller('FruitsCtrl', function($scope){

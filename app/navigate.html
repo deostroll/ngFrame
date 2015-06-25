@@ -2,7 +2,7 @@
 <html class="no-js">
   <head>
     <meta charset="utf-8">
-    <title>ngFrame Demos</title>
+    <title>ngFrame Demos - Navigation Example</title>
     <meta name="description" content="">
     <meta name="viewport" content="width=device-width">
     <link rel="shortcut icon" href="/favicon.ico">
@@ -18,11 +18,33 @@
   </head>
   <body ng-app="myapp">
     <div ng-controller="AppCtrl">
-        <div layout="row">
+        <div layout="column">
+            <div flex>
+                <h3>Navigate via code example</h3>
+            </div>
             <div flex>
                 <p>Select Demo:</p>
                 <select ng-options="dmo as dmo.item for dmo in demos"
                     ng-model="demo"></select>
+
+                <input type="button" value="Go" ng-click="change()"/>
+                <br>
+                <br>
+                <p>
+                    <code>demo</code> variable
+                    <br>
+                    <pre>
+                        {{ demo | json }}
+                    </pre>
+                </p>
+
+                <p>
+                    <code>example</code> variable
+                    <br>
+                    <pre>
+                        {{ example | json }}
+                    </pre>
+                </p>
             </div>
         </div>
         <div layout="column" layout-padding="24px">
@@ -47,7 +69,7 @@
         <script type="text/javascript" src="scripts/frameLogger.js"></script>
         <script type="text/javascript" src="scripts/frameProvider.js"></script>
         <script type="text/javascript" src="scripts/ngframe.js"></script>
-        <script src="scripts/main.js"></script>
+        <script src="scripts/main4.js"></script>
         <!-- endbuild -->
 </body>
 </html>
