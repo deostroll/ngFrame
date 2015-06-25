@@ -2,6 +2,7 @@
   "name": "ngFrame",
   "version" : "0.0.1",
   "main" : "dist/ngFrame.js",
+  "description": "a browser frame called by its angular name is an ngFrame. For more details visit - https://github.com/deostroll/ngFrame",
   "ignore" : [
   	"app",
   	"test",

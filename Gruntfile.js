@@ -349,6 +349,16 @@ module.exports = function (grunt) {
         'imagemin',
         'svgmin'
       ]
+    },
+    ngAnnotate: {
+      options: {
+        singleQuotes: true
+      },
+      dist: {        
+        files : {
+          '<%= config.dist %>/<%= config.pkg.name %>.js' : '<%= config.dist %>/<%= config.pkg.name %>.js'        
+        }
+      }
     }
   });
 
@@ -461,6 +471,7 @@ module.exports = function (grunt) {
       'clean:dist2',
       'prepareConcat',
       'concat',
+      'ngAnnotate',
       'uglify'
     ]);
 };

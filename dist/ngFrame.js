@@ -75,7 +75,7 @@ window.ngFrameModule = window.angular.module('ngFrame',['ng']);
 			this.navigationCancel = false;
 			this.$scope = null;
 			this.src = null;
-			this.controller = null;
+			this.controller = null;			
 		};
 
 		NgFrame.prototype.$$setDirty = function(info) {
@@ -112,6 +112,9 @@ window.ngFrameModule = window.angular.module('ngFrame',['ng']);
 			this.navigationCancel = !!value;
 		};
 
+		NgFrame.prototype.navigate = function(navinfo) {
+
+		};
 		//end 13: NgFrame constructor
 
 		//begin 10: framework essentials
@@ -224,7 +227,7 @@ window.ngFrameModule = window.angular.module('ngFrame',['ng']);
 		//end 10: framework essentials
 
 		//begin 21: factory
-		this.$get = function frameFactory($ngfl, $rootScope) {
+		this.$get = ['$ngfl', '$rootScope', function frameFactory($ngfl, $rootScope) {
 			
 			provider.$$setLoggerInstance($ngfl('provider'));
 			provider.$$setRootScope($rootScope);
@@ -280,7 +283,7 @@ window.ngFrameModule = window.angular.module('ngFrame',['ng']);
 
 			//end 2: factory instance
 			return factory;
-		};
+		}];
 		//end 21: factory
 
 		//begin 22: utils
@@ -348,7 +351,7 @@ window.ngFrameModule = window.angular.module('ngFrame',['ng']);
 (function(module){
 	'use strict';
 	module
-		.directive('ngFrame', function($compile, $controller, $templateRequest, $sce, $parse, $rootScope, $frame) {
+		.directive('ngFrame', ['$compile', '$controller', '$templateRequest', '$sce', '$parse', '$rootScope', '$frame', function($compile, $controller, $templateRequest, $sce, $parse, $rootScope, $frame) {
 			var postLinkFn = function(scope, elem, attrs) {			
 				var lg = $frame.$logger('directive');
 				lg.log('$create');
@@ -437,5 +440,5 @@ window.ngFrameModule = window.angular.module('ngFrame',['ng']);
 			return {
 				link: postLinkFn
 			};
-		});	
+		}]);	
 })(window.ngFrameModule, window.angular);

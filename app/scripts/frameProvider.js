@@ -74,7 +74,7 @@
 			this.navigationCancel = false;
 			this.$scope = null;
 			this.src = null;
-			this.controller = null;
+			this.controller = null;			
 		};
 
 		NgFrame.prototype.$$setDirty = function(info) {
@@ -111,6 +111,9 @@
 			this.navigationCancel = !!value;
 		};
 
+		NgFrame.prototype.navigate = function(navinfo) {
+
+		};
 		//end 13: NgFrame constructor
 
 		//begin 10: framework essentials
